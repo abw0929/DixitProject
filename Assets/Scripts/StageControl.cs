@@ -46,6 +46,13 @@ public class StageControl : MonoBehaviour {
     }
 
 
+    public void SetCardImage(int index, CardType type)
+    {
+        cardImages[index].GetComponent<Image>().overrideSprite = TextureControl.GetCardTexture((int)type);
+        cardImageTypes[index] = type;
+    }
+
+
     public void PreviewImageOpen(int cardIndex)
     {
         previewImage.Play((MyCardIndex)cardIndex, cardImageTypes[cardIndex]);

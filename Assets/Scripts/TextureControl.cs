@@ -5,7 +5,7 @@ public class TextureControl : MonoBehaviour {
 
 
     [SerializeField]
-    private Texture2D[] cardTextures;
+    private Sprite[] cardTexture;
 
 
     private static TextureControl instance;
@@ -16,15 +16,15 @@ public class TextureControl : MonoBehaviour {
     }
 
 
-    public static Texture2D GetCardTexture(int index)
+    public static Sprite GetCardTexture(int index)
     {
         return instance.InnerGetCardTexture(index);
     }
 
 
-    private Texture2D InnerGetCardTexture(int index)
+    private Sprite InnerGetCardTexture(int index)
     {
-        return cardTextures[index];
+        return cardTexture[index];
     }
 
 }
