@@ -129,6 +129,8 @@ public static class GlobalVariables {
         get { return publicCardNum; }
     }
 
+    public const int TOTAL_CARD_NUM = 84;
+
     public const float SMALL_CARD_SIZE_W = 205;
     public const float SMALL_CARD_SIZE_H = 304;
 

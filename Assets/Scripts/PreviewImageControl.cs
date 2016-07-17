@@ -7,7 +7,8 @@ enum PreviewImageState
     Idle = 0,
     ZoomIn = 1,
     Viewing = 2,
-    ZoomOut = 3
+    ZoomOut = 3,
+    FlyingOut = 4,
 }
 
 public class PreviewImageControl : MonoBehaviour {
@@ -16,6 +17,8 @@ public class PreviewImageControl : MonoBehaviour {
     private const int IMAGE_FULL_Y = 20;
     private const int IMAGE_FULL_W = 800;
     private const int IMAGE_FULL_H = 1070;
+
+    private const int IMAGE_AWAY_Y = 1250;
 
     [SerializeField]
     private int animationFrames = 30;
@@ -52,7 +55,17 @@ public class PreviewImageControl : MonoBehaviour {
             return;
 
         StopAllCoroutines();
-        StartCoroutine(PreviewRoutine());
+        StartCoroutine(CloseRoutine());
+    }
+
+
+    public void FlyOut()
+    {
+        if (state != PreviewImageState.Viewing)
+            return;
+
+        StopAllCoroutines();
+        StartCoroutine(FlyOutRoutine());
     }
 
 
@@ -63,7 +76,7 @@ public class PreviewImageControl : MonoBehaviour {
         float wStep = (IMAGE_FULL_W - GlobalVariables.SMALL_CARD_SIZE_W) / animationFrames;
         float hStep = (IMAGE_FULL_H - GlobalVariables.SMALL_CARD_SIZE_H) / animationFrames;
 
-        //previewImage.mainTexture = 
+        previewImage.overrideSprite = TextureControl.GetCardTexture((int)previewCard);
         previewImage.enabled = true;
         state = PreviewImageState.ZoomIn;
 
@@ -95,6 +108,24 @@ public class PreviewImageControl : MonoBehaviour {
                                                                    IMAGE_FULL_Y + yStep * i, 0);
             previewImage.rectTransform.sizeDelta = new Vector2(IMAGE_FULL_W + wStep * i,
                                                                IMAGE_FULL_H + hStep * i);
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        }
+
+        previewImage.enabled = false;
+        state = PreviewImageState.Idle;
+    }
+
+
+    private IEnumerator FlyOutRoutine()
+    {
+        float yStep = (IMAGE_AWAY_Y - IMAGE_FULL_Y) / animationFrames;
+
+        state = PreviewImageState.FlyingOut;
+
+        for (int i = 0; i <= animationFrames; i++)
+        {
+            previewImage.rectTransform.localPosition = new Vector3(IMAGE_FULL_X,
+                                                                   IMAGE_FULL_Y + yStep * i, 0);
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
 

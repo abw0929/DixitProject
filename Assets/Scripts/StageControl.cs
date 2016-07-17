@@ -5,10 +5,31 @@ using System.Collections;
 public class StageControl : MonoBehaviour {
 
     [SerializeField]
+    private Text connectionInfoText;
+
+    [SerializeField]
     private GameObject inputField;
 
     [SerializeField]
+    private Text inputFieldText;
+
+    [SerializeField]
+    private GameObject inputNo;
+
+    [SerializeField]
+    private GameObject inputYes;
+
+    [SerializeField]
     private GameObject[] cardImages;
+
+    [SerializeField]
+    private GameObject startButton;
+
+    [SerializeField]
+    private GameObject infoText;
+
+    [SerializeField]
+    private GameObject titleText;
 
     [SerializeField]
     private PreviewImageControl previewImage;
@@ -22,12 +43,32 @@ public class StageControl : MonoBehaviour {
         cardImageTypes = new CardType[7];
         SetInputVis(false);
         SetAllCardVis(false);
+        SetStartButtonVis(false);
+        SetInfoText(false, "");
+        SetTitleText(false, "");
+    }
+
+
+    public void SetConnInfoVis(bool vis)
+    {
+        connectionInfoText.enabled = vis;
     }
 
 
     public void SetInputVis(bool vis)
     {
         inputField.SetActive(vis);
+        inputYes.SetActive(vis);
+        inputNo.SetActive(vis);
+
+        inputFieldText.text = "";
+    }
+
+
+    public void SetYesNoVis(bool vis)
+    {
+        inputYes.SetActive(vis);
+        inputNo.SetActive(vis);
     }
 
 
@@ -56,6 +97,47 @@ public class StageControl : MonoBehaviour {
     public void PreviewImageOpen(int cardIndex)
     {
         previewImage.Play((MyCardIndex)cardIndex, cardImageTypes[cardIndex]);
+    }
+
+
+    public void PreviewImageFlyOut()
+    {
+        previewImage.FlyOut();
+    }
+
+
+    public void PreviewImageClose()
+    {
+        previewImage.Close();
+    }
+
+
+    public void SetStartButtonVis(bool vis)
+    {
+        startButton.SetActive(vis);
+    }
+
+
+    public void SetInfoText(bool vis, string msg)
+    {
+        infoText.SetActive(vis);
+        infoText.GetComponent<Text>().text = msg;
+    }
+
+
+    public void SetTitleText(bool vis, string msg)
+    {
+        titleText.SetActive(vis);
+        titleText.GetComponent<Text>().text = msg;
+    }
+
+
+    public string GetInputText()
+    {
+        string msg = inputFieldText.text;
+        inputFieldText.text = "";
+
+        return msg;
     }
 
 }

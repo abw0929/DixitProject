@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.Networking;
-using System.Collections;
+﻿using UnityEngine.Networking;
 using System;
 
 
@@ -15,31 +13,46 @@ public enum MyMessageType
     GiveTitle = 13,
     AskCard = 14,
     GiveCard = 15,
+    AskVote = 16,
+    GiveVote = 17,
     ShowResult = 20,
+    ResetAllClient = 99,
 }
 
-
-public class MyMessage
+[Serializable]
+public struct MyMessage
 {
-    public MyMessageType messageType;
+    public int messageType;
     public int value;
+    public int[] values;
     public string msg;
-    public PlayerIndex from;
+    public int from;
 
     public MyMessage(MyMessageType type)
     {
-        this.messageType = type;
+        this.messageType = (int)type;
         this.value = 0;
+        this.values = new int[0];
         this.msg = "";
-        this.from = GlobalVariables.PlayerIndex;
+        this.from = (int)GlobalVariables.PlayerIndex;
     }
 
     public MyMessage(MyMessageType type, int value, string msg)
     {
-        this.messageType = type;
+        this.messageType = (int)type;
         this.value = value;
+        this.values = new int[0];
         this.msg = msg;
-        this.from = GlobalVariables.PlayerIndex;
+        this.from = (int)GlobalVariables.PlayerIndex;
+    }
+
+    public MyMessage(MyMessageType type, int[] values, string msg)
+    {
+        this.messageType = (int)type;
+        this.value = 0;
+        this.values = values;
+        this.msg = msg;
+        this.from = (int)GlobalVariables.PlayerIndex;
     }
 }
 

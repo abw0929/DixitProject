@@ -35,7 +35,7 @@ public class PlayerIndexControl : MonoBehaviour {
 
     public void GiveIndex()
     {
-        GameFlowControl.SendMessageToAll(new MyMessage(MyMessageType.SetPlayerIndex, ++currentGiveIndex, ""));
+        GameFlowControl.SendGiveIndex(++currentGiveIndex);
     }
 
 
