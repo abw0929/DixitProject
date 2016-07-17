@@ -44,7 +44,7 @@ public static class GameFlowControl {
         }
         catch(Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.Log(e.Message + "\n" + e.StackTrace);
         }
     }
 
@@ -57,7 +57,7 @@ public static class GameFlowControl {
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.Log(e.Message + "\n" + e.StackTrace);
         }
     }
 
@@ -68,13 +68,13 @@ public static class GameFlowControl {
         {
             if(playerIndex == PlayerIndex.All || playerIndex == GlobalVariables.PlayerIndex)
             {
-                Debug.Log(string.Format("Receive: {0} {1} value : {2} msg : {3}", (MyMessageType)msg.messageType, playerIndex, msg.value, msg.msg));
+                Debug.Log(string.Format("Receive: {0} from : {1} to : {2} value : {3} msg : {4}", (MyMessageType)msg.messageType, (PlayerIndex)msg.from, playerIndex, msg.value, msg.msg));
                 OnMessage(msg);
             }
         }
         catch (Exception e)
         {
-            Debug.Log(e.StackTrace);
+            Debug.Log(e.Message + "\n" + e.StackTrace);
         }
     }
 
@@ -88,6 +88,12 @@ public static class GameFlowControl {
     public static void SendStartGame()
     {
         SendMessageToAll(new MyMessage(MyMessageType.StartGame));
+    }
+
+    
+    public static void SendNextRound()
+    {
+        SendMessageToAll(new MyMessage(MyMessageType.StartNextRound));
     }
 
 
@@ -210,8 +216,15 @@ public static class GameFlowControl {
     }
 
 
+    private static void ReceiveStartNextRound()
+    {
+        gameFlow.StartNextRound();
+    }
+
+
     private static void ReceiveResetAllClient()
     {
+        GlobalObjects.NetworkManager.Reset();
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
@@ -219,6 +232,14 @@ public static class GameFlowControl {
     public static void StartGame()
     {
         gameFlow.StartGame();
+    }
+
+
+    public static void Reset()
+    {
+        State = GameStates.None;
+        TitlePlayer = 1;
+        TitleCard = 0;
     }
 
 
@@ -279,6 +300,11 @@ public static class GameFlowControl {
             case MyMessageType.ShowResult:
                 {
                     ReceiveShowResult();
+                    break;
+                }
+            case MyMessageType.StartNextRound:
+                {
+                    ReceiveStartNextRound();
                     break;
                 }
             case MyMessageType.ResetAllClient:

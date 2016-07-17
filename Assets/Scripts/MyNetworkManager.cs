@@ -10,6 +10,9 @@ public class MyNetworkManager : NetworkManager {
     private Text infoText;
 
     [SerializeField]
+    private GameObject resetButton;
+
+    [SerializeField]
     private Text addressText;
 
     [SerializeField]
@@ -19,7 +22,9 @@ public class MyNetworkManager : NetworkManager {
 
     private void Start()
     {
-        infoText.text = networkAddress;
+        GlobalObjects.SetNetworkManager(this);
+        GameFlowControl.Reset();
+        infoText.text = Network.player.ipAddress;
     }
 
 
@@ -28,39 +33,51 @@ public class MyNetworkManager : NetworkManager {
         StartHost();
 
         SetUIVis(false);
-        infoText.text = "Waiting...";
+        infoText.text = Network.player.ipAddress + "\nWaiting...";
+        resetButton.SetActive(true);
+
+        GameFlowControl.State = GameStates.Waiting;
     }
 
 
     public void ConnectTo()
     {
         StartClient();
-        client.Connect("192.168.1.103", 7777);
+        client.Connect(addressText.text, 7777);
 
         SetUIVis(false);
         infoText.text = "Waiting...";
+        resetButton.SetActive(true);
+
+        GameFlowControl.State = GameStates.Waiting;
     }
 
-
-    public override void OnClientConnect(NetworkConnection conn)
-    {
-        if(NetworkServer.connections.Count >= 2)
-            infoText.enabled = false;
-
-        base.OnClientConnect(conn);
-    }
 
 
     public override void OnClientDisconnect(NetworkConnection conn)
     {
         base.OnClientDisconnect(conn);
-        GameFlowControl.SendResetAllClients();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
 
     public override void OnServerDisconnect(NetworkConnection conn)
     {
         base.OnServerDisconnect(conn);
+        GameFlowControl.SendResetAllClients();
+    }
+
+
+    public override void OnClientError(NetworkConnection conn, int errorCode)
+    {
+        base.OnClientError(conn, errorCode);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+
+
+    public override void OnServerError(NetworkConnection conn, int errorCode)
+    {
+        base.OnServerError(conn, errorCode);
         GameFlowControl.SendResetAllClients();
     }
 
@@ -72,11 +89,31 @@ public class MyNetworkManager : NetworkManager {
     }
 
 
+    public override void OnClientSceneChanged(NetworkConnection conn)
+    {
+
+    }
+
+
+    public override void OnServerSceneChanged(string sceneName)
+    {
+
+    }
+
+
     public void SetUIVis(bool vis)
     {
         foreach (GameObject obj in UIs)
             obj.SetActive(vis);
     }
 
+
+    public void Reset()
+    {
+        StopHost();
+        StopServer();
+        NetworkServer.Reset();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
 
 }

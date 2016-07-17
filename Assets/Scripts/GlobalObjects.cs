@@ -15,6 +15,12 @@ public static class GlobalObjects  {
         get { return indexControl; }
     }
 
+    private static MyNetworkManager myNetworkManager;
+    public static MyNetworkManager NetworkManager
+    {
+        get { return myNetworkManager; }
+    }
+
     public static void SetMessageControl(NetworkMessageControl control)
     {
         networkMessage = control;
@@ -23,6 +29,11 @@ public static class GlobalObjects  {
     public static void SetIndexControl(PlayerIndexControl control)
     {
         indexControl = control; 
+    }
+
+    public static void SetNetworkManager(MyNetworkManager manager)
+    {
+        myNetworkManager = manager;
     }
 
 }

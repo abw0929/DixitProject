@@ -8,6 +8,9 @@ public class StageControl : MonoBehaviour {
     private Text connectionInfoText;
 
     [SerializeField]
+    private GameObject resetButton;
+
+    [SerializeField]
     private GameObject inputField;
 
     [SerializeField]
@@ -52,6 +55,7 @@ public class StageControl : MonoBehaviour {
     public void SetConnInfoVis(bool vis)
     {
         connectionInfoText.enabled = vis;
+        resetButton.SetActive(vis);
     }
 
 

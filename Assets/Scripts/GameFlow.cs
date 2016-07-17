@@ -110,7 +110,8 @@ public class GameFlow : MonoBehaviour {
 
         yield return new WaitForSeconds(5.0f);
 
-        StartCoroutine(NextRoundRoutine());
+        if (GlobalVariables.PlayerIndex == PlayerIndex.Player1)
+            GameFlowControl.SendNextRound();
 
         yield return null;
     }
@@ -147,6 +148,13 @@ public class GameFlow : MonoBehaviour {
     public void StartGame()
     {
         StartCoroutine(StartGameRoutine());
+    }
+
+
+    public void StartNextRound()
+    {
+        StopAllCoroutines();
+        StartCoroutine(NextRoundRoutine());
     }
 
 

@@ -16,6 +16,7 @@ public enum MyMessageType
     AskVote = 16,
     GiveVote = 17,
     ShowResult = 20,
+    StartNextRound = 21,
     ResetAllClient = 99,
 }
 
@@ -81,7 +82,7 @@ public class NetworkMessageControl : NetworkBehaviour {
     {
         if (isLocalPlayer)
         {
-            CmdServer(PlayerIndex.All, msg);
+            CmdToServer(PlayerIndex.All, msg);
         }
     }
 
@@ -90,13 +91,13 @@ public class NetworkMessageControl : NetworkBehaviour {
     {
         if (isLocalPlayer)
         {
-            CmdServer(playerIndex, msg);
+            CmdToServer(playerIndex, msg);
         }
     }
 
 
     [Command]
-    private void CmdServer(PlayerIndex playerIndex, MyMessage msg)
+    private void CmdToServer(PlayerIndex playerIndex, MyMessage msg)
     {
         RpcPlayers(playerIndex, msg);
     }

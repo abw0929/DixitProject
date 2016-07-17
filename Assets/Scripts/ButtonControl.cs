@@ -12,6 +12,15 @@ public class ButtonControl : MonoBehaviour {
     {
         GameFlowControl.SendStartGame();
     }
+    
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            AndroidBackButtonPress();
+        }
+    }
 
 
     public void CardButtonClick(int index)
@@ -66,6 +75,19 @@ public class ButtonControl : MonoBehaviour {
         else if (GameFlowControl.State == GameStates.WaitingAllVotes)
         {
             gameFlow.CloseSelect();
+        }
+    }
+
+
+    public void AndroidBackButtonPress()
+    {
+        if(GameFlowControl.State == GameStates.None)
+        {
+            Application.Quit();
+        }
+        else
+        {
+            GameFlowControl.SendResetAllClients();
         }
     }
 
