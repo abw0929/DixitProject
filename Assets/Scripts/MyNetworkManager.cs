@@ -24,6 +24,7 @@ public class MyNetworkManager : NetworkManager {
     {
         GlobalObjects.SetNetworkManager(this);
         GameFlowControl.Reset();
+        GlobalVariables.Reset();
         infoText.text = Network.player.ipAddress;
     }
 

@@ -176,4 +176,10 @@ public static class GlobalVariables {
         Debug.Log("PlayerIndex Set To : " + index);
     }
 
+
+    public static void Reset()
+    {
+        playerIndex = PlayerIndex.None;
+    }
+
 }

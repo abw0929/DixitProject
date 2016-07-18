@@ -69,10 +69,11 @@ public class NetworkMessageControl : NetworkBehaviour {
             if (isServer)
             {
                 GlobalObjects.IndexControl.SetIndex(PlayerIndex.Player1);
+                GameFlowControl.SendSetPlayerNum();
             }
             else
             {
-                GameFlowControl.SendMessageToPlayer(PlayerIndex.Player1, new MyMessage(MyMessageType.OnClientConnect));
+                GameFlowControl.SendOnClientConnect();
             }
         }
     }

@@ -135,12 +135,18 @@ public class GameFlow : MonoBehaviour {
     }
 
 
-    public void SetPlayerNum()
+    public void SetPlayerNum(int value)
     {
-        if (GlobalVariables.PlayerNum >= 3 && GlobalVariables.PlayerIndex == PlayerIndex.Player1)
+        if (value >= 3 && GlobalVariables.PlayerIndex == PlayerIndex.Player1)
         {
             stage.SetStartButtonVis(true);
             stage.SetConnInfoVis(false);
+        }
+        for (int i = 0; i < value; i++)
+        {
+            GlobalObjects.ScoreInterface.SetVis(i, true);
+            if ((int)GlobalVariables.PlayerIndex - 1 == i)
+                GlobalObjects.ScoreInterface.SetPlayerName(i);
         }
     }
 

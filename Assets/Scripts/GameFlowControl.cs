@@ -79,9 +79,21 @@ public static class GameFlowControl {
     }
 
 
+    public static void SendOnClientConnect()
+    {
+        SendMessageToPlayer(PlayerIndex.Player1, new MyMessage(MyMessageType.OnClientConnect));
+    }
+
+
     public static void SendGiveIndex(int index)
     {
         SendMessageToAll(new MyMessage(MyMessageType.SetPlayerIndex, index, ""));
+    }
+
+
+    public static void SendSetPlayerNum()
+    {
+        SendMessageToAll(new MyMessage(MyMessageType.SetPlayerNum, GlobalObjects.IndexControl.CurrentPlayers, ""));
     }
 
 
@@ -148,7 +160,7 @@ public static class GameFlowControl {
     private static void ReceiveOnClientConnect()
     {
         GlobalObjects.IndexControl.GiveIndex();
-        SendMessageToAll(new MyMessage(MyMessageType.SetPlayerNum, GlobalObjects.IndexControl.CurrentPlayers, ""));
+        SendSetPlayerNum();
     }
 
 
@@ -163,8 +175,8 @@ public static class GameFlowControl {
         if (value >= 3)
         {
             GlobalVariables.SetPlayerNum((PlayerNumberType)(value));
-            gameFlow.SetPlayerNum();
         }
+        gameFlow.SetPlayerNum(value);
     }
 
 

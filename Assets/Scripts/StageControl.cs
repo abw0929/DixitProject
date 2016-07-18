@@ -61,11 +61,11 @@ public class StageControl : MonoBehaviour {
 
     public void SetInputVis(bool vis)
     {
+        inputFieldText.text = "";
+
         inputField.SetActive(vis);
         inputYes.SetActive(vis);
         inputNo.SetActive(vis);
-
-        inputFieldText.text = "";
     }
 
 
