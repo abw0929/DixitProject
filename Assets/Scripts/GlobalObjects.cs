@@ -21,11 +21,6 @@ public static class GlobalObjects  {
         get { return myNetworkManager; }
     }
 
-    private static ScoreInterfaceControl scoreInterface;
-    public static ScoreInterfaceControl ScoreInterface
-    {
-        get { return scoreInterface; }
-    }
 
     public static void SetMessageControl(NetworkMessageControl control)
     {
@@ -40,11 +35,6 @@ public static class GlobalObjects  {
     public static void SetNetworkManager(MyNetworkManager manager)
     {
         myNetworkManager = manager;
-    }
-
-    public static void SetScoreInterface(ScoreInterfaceControl control)
-    {
-        scoreInterface = control;
     }
 
 }

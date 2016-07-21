@@ -27,15 +27,16 @@ public class CardDeckControl {
     }
 
 
-    public CardType[] GetPlayerDeck(PlayerIndex player)
+    public int[] CurrentGiver
     {
-        return playerDeck[(int)player - 1].ToArray();
-    }
+        get
+        {
+            int[] result = new int[showDeckGiver.Count];
+            for (int i = 0; i < result.Length; i++)
+                result[i] = (int)showDeckGiver[i];
 
-
-    public int GetPlayerDeckCount(PlayerIndex player)
-    {
-        return playerDeck[(int)player - 1].Count;
+            return result;
+        }
     }
 
 
@@ -46,6 +47,18 @@ public class CardDeckControl {
 
         for(int i = 0; i < 7; i++)
             playerDeck[i] = new List<CardType>();
+    }
+
+
+    public CardType[] GetPlayerDeck(PlayerIndex player)
+    {
+        return playerDeck[(int)player - 1].ToArray();
+    }
+
+
+    public int GetPlayerDeckCount(PlayerIndex player)
+    {
+        return playerDeck[(int)player - 1].Count;
     }
 
 
@@ -69,6 +82,9 @@ public class CardDeckControl {
             CardType temp = showDeck[randIndex];
             showDeck[randIndex] = showDeck[i];
             showDeck[i] = temp;
+            PlayerIndex temp2 = showDeckGiver[randIndex];
+            showDeckGiver[randIndex] = showDeckGiver[i];
+            showDeckGiver[i] = temp2;
         }
     }
 

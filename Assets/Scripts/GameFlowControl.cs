@@ -30,6 +30,12 @@ public static class GameFlowControl {
     public static int TitlePlayer = 1;
     public static int TitleCard = 0;
 
+    public static int[] CurrentShowDeck;
+    public static int[] CurrentShowGiver;
+
+    public static int[] PlayerPoints;
+    public static int[] PlayerGetPoints;
+
     public static void SetGameFlow(GameFlow flow)
     {
         gameFlow = flow;
@@ -133,9 +139,9 @@ public static class GameFlowControl {
     }
 
 
-    public static void SendAskVote(int[] showDeck)
+    public static void SendAskVote(int[] showDeck, int[] giver)
     {
-        SendMessageToAll(new MyMessage(MyMessageType.AskVote, showDeck, ""));
+        SendMessageToAll(new MyMessage(MyMessageType.AskVote, showDeck, giver, ""));
     }
 
 
@@ -145,9 +151,9 @@ public static class GameFlowControl {
     }
 
 
-    public static void SendShowResult()
+    public static void SendShowResult(int[] playerPoints, int[] playerGetPoints)
     {
-        SendMessageToAll(new MyMessage(MyMessageType.ShowResult));
+        SendMessageToAll(new MyMessage(MyMessageType.ShowResult, playerPoints, playerGetPoints, ""));
     }
 
 
@@ -200,6 +206,7 @@ public static class GameFlowControl {
 
     private static void ReceiveAskCard(string title, int value)
     {
+        TitleCard = value;
         gameFlow.AskedGiveOutCard(title, value);
     }
 
@@ -210,8 +217,10 @@ public static class GameFlowControl {
     }
 
 
-    private static void ReceiveAskVote(int[] values)
+    private static void ReceiveAskVote(int[] values, int[] values2)
     {
+        CurrentShowDeck = values;
+        CurrentShowGiver = values2;
         gameFlow.AskedGiveVote(values);
     }
 
@@ -222,8 +231,10 @@ public static class GameFlowControl {
     }
 
 
-    private static void ReceiveShowResult()
+    private static void ReceiveShowResult(int[] values, int[] values2)
     {
+        PlayerPoints = values;
+        PlayerGetPoints = values2;
         gameFlow.ShowResult();
     }
 
@@ -252,6 +263,11 @@ public static class GameFlowControl {
         State = GameStates.None;
         TitlePlayer = 1;
         TitleCard = 0;
+        CurrentShowDeck = null;
+        CurrentShowGiver = null;
+
+        PlayerPoints = null;
+        PlayerGetPoints = null;
     }
 
 
@@ -301,7 +317,7 @@ public static class GameFlowControl {
                 }
             case MyMessageType.AskVote:
                 {
-                    ReceiveAskVote(msg.values);
+                    ReceiveAskVote(msg.values, msg.values2);
                     break;
                 }
             case MyMessageType.GiveVote:
@@ -311,7 +327,7 @@ public static class GameFlowControl {
                 }
             case MyMessageType.ShowResult:
                 {
-                    ReceiveShowResult();
+                    ReceiveShowResult(msg.values, msg.values2);
                     break;
                 }
             case MyMessageType.StartNextRound:

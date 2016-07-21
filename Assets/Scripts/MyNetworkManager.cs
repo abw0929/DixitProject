@@ -26,6 +26,7 @@ public class MyNetworkManager : NetworkManager {
         GameFlowControl.Reset();
         GlobalVariables.Reset();
         infoText.text = Network.player.ipAddress;
+        connectionConfig.NetworkDropThreshold = 90;
     }
 
 

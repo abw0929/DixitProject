@@ -26,6 +26,7 @@ public struct MyMessage
     public int messageType;
     public int value;
     public int[] values;
+    public int[] values2;
     public string msg;
     public int from;
 
@@ -34,6 +35,7 @@ public struct MyMessage
         this.messageType = (int)type;
         this.value = 0;
         this.values = new int[0];
+        this.values2 = new int[0];
         this.msg = "";
         this.from = (int)GlobalVariables.PlayerIndex;
     }
@@ -43,6 +45,7 @@ public struct MyMessage
         this.messageType = (int)type;
         this.value = value;
         this.values = new int[0];
+        this.values2 = new int[0];
         this.msg = msg;
         this.from = (int)GlobalVariables.PlayerIndex;
     }
@@ -52,6 +55,17 @@ public struct MyMessage
         this.messageType = (int)type;
         this.value = 0;
         this.values = values;
+        this.values2 = new int[0];
+        this.msg = msg;
+        this.from = (int)GlobalVariables.PlayerIndex;
+    }
+
+    public MyMessage(MyMessageType type, int[] values, int[] values2, string msg)
+    {
+        this.messageType = (int)type;
+        this.value = 0;
+        this.values = values;
+        this.values2 = values2;
         this.msg = msg;
         this.from = (int)GlobalVariables.PlayerIndex;
     }

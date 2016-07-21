@@ -26,6 +26,9 @@ public class StageControl : MonoBehaviour {
     private GameObject[] cardImages;
 
     [SerializeField]
+    private GameObject[] cardFrameImages;
+
+    [SerializeField]
     private GameObject startButton;
 
     [SerializeField]
@@ -61,7 +64,7 @@ public class StageControl : MonoBehaviour {
 
     public void SetInputVis(bool vis)
     {
-        inputFieldText.text = "";
+        inputField.GetComponent<InputField>().text = "";
 
         inputField.SetActive(vis);
         inputYes.SetActive(vis);
@@ -72,6 +75,12 @@ public class StageControl : MonoBehaviour {
     public void SetYesNoVis(bool vis)
     {
         inputYes.SetActive(vis);
+        inputNo.SetActive(vis);
+    }
+
+
+    public void SetNoVis(bool vis)
+    {
         inputNo.SetActive(vis);
     }
 
@@ -88,6 +97,21 @@ public class StageControl : MonoBehaviour {
     public void SetCardVis(int index, bool vis)
     {
         cardImages[index].SetActive(vis);
+    }
+
+
+    public void SetAllFrameVis(bool vis)
+    {
+        foreach (GameObject card in cardFrameImages)
+        {
+            card.SetActive(vis);
+        }
+    }
+
+
+    public void SetFrameVis(int index, bool vis)
+    {
+        cardFrameImages[index].SetActive(vis);
     }
 
 
@@ -139,7 +163,7 @@ public class StageControl : MonoBehaviour {
     public string GetInputText()
     {
         string msg = inputFieldText.text;
-        inputFieldText.text = "";
+        inputField.GetComponent<InputField>().text = "";
 
         return msg;
     }

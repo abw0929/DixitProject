@@ -8,14 +8,17 @@ public class GameFlow : MonoBehaviour {
     [SerializeField]
     private StageControl stage;
     [SerializeField]
+    private ScoreInterfaceControl scoreInterface;
+    [SerializeField]
     private CardControl myCard;
 
     private Dictionary<PlayerIndex, int> playerVotes = new Dictionary<PlayerIndex, int>();
 
     private CardDeckControl cardDeck = new CardDeckControl();
+    private PointCalculator pointCalculator = new PointCalculator();
 
 
-	void Awake () {
+    void Awake () {
         GameFlowControl.SetGameFlow(this);
 	}
 	
@@ -106,9 +109,29 @@ public class GameFlow : MonoBehaviour {
 
     private IEnumerator ShowResultRoutine()
     {
+        GameFlowControl.State = GameStates.ShowResult;
+
         stage.SetInfoText(true, "RESULTS");
 
-        yield return new WaitForSeconds(5.0f);
+        for(int i = 0; i < GlobalVariables.PublicCardNum; i++)
+        {
+            if(GameFlowControl.CurrentShowDeck[i] == GameFlowControl.TitleCard)
+            {
+                stage.SetFrameVis(i, true);
+            }
+        }
+
+        for(int i = 0; i < GlobalVariables.PlayerNum; i++)
+        {
+            scoreInterface.SetScore(i, GameFlowControl.PlayerPoints[i]);
+            scoreInterface.SetGetPoint(i, GameFlowControl.PlayerGetPoints[i], true);
+        }
+
+        for (int i = 30; i >= 0; i--)
+        {
+            stage.SetInfoText(true, "Next Round In " + i + " Seconds...");
+            yield return new WaitForSeconds(1.0f);
+        }
 
         if (GlobalVariables.PlayerIndex == PlayerIndex.Player1)
             GameFlowControl.SendNextRound();
@@ -129,6 +152,12 @@ public class GameFlow : MonoBehaviour {
         myCard.Reset();
         playerVotes.Clear();
 
+        stage.SetAllFrameVis(false);
+        for (int i = 0; i < GlobalVariables.PlayerNum; i++)
+        {
+            scoreInterface.SetGetPoint(i, 0, false);
+        }
+
         StartCoroutine(RoundDealRoutine());
 
         yield return null;
@@ -144,9 +173,13 @@ public class GameFlow : MonoBehaviour {
         }
         for (int i = 0; i < value; i++)
         {
-            GlobalObjects.ScoreInterface.SetVis(i, true);
+            scoreInterface.SetVis(i, true);
             if ((int)GlobalVariables.PlayerIndex - 1 == i)
-                GlobalObjects.ScoreInterface.SetPlayerName(i);
+                scoreInterface.SetPlayerName(i);
+        }
+        if(GlobalVariables.PlayerIndex == PlayerIndex.Player1)
+        {
+            pointCalculator.SetPlayerNum(value);
         }
     }
 
@@ -231,7 +264,7 @@ public class GameFlow : MonoBehaviour {
             if(cardDeck.ShowDeckCardNum >= GlobalVariables.PublicCardNum)
             {
                 cardDeck.ShuffleShowDeck();
-                GameFlowControl.SendAskVote(cardDeck.CurrentShowDeck);
+                GameFlowControl.SendAskVote(cardDeck.CurrentShowDeck, cardDeck.CurrentGiver);
             }
         }
     }
@@ -244,7 +277,18 @@ public class GameFlow : MonoBehaviour {
             playerVotes.Add((PlayerIndex)from, card);
 
             if (playerVotes.Count >= GlobalVariables.PlayerNum - 1)
-                GameFlowControl.SendShowResult();
+            {
+                int[] playerPoints;
+                int[] getPoints;
+                pointCalculator.GetPoints(GameFlowControl.CurrentShowDeck,
+                                          GameFlowControl.CurrentShowGiver,
+                                          GameFlowControl.TitleCard,
+                                          playerVotes,
+                                          out playerPoints,
+                                          out getPoints);
+
+                GameFlowControl.SendShowResult(playerPoints, getPoints);
+            }
         }
     }
 
@@ -266,7 +310,14 @@ public class GameFlow : MonoBehaviour {
     public void SelectVoteCard(int index)
     {
         stage.PreviewImageOpen(index);
-        stage.SetYesNoVis(true);
+        if ((PlayerIndex)GameFlowControl.CurrentShowGiver[index] != GlobalVariables.PlayerIndex)
+        {
+            stage.SetYesNoVis(true);
+        }
+        else
+        {
+            stage.SetNoVis(true);
+        }
     }
 
 
@@ -318,7 +369,7 @@ public class GameFlow : MonoBehaviour {
 
     public void SendVoteCard(int index)
     {
-        GameFlowControl.SendVoteCard((int)myCard.ViewCard(index));
+        GameFlowControl.SendVoteCard(GameFlowControl.CurrentShowDeck[index]);
         stage.PreviewImageFlyOut();
         stage.SetInputVis(false);
 

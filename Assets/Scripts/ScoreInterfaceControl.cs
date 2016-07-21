@@ -18,10 +18,6 @@ public class ScoreInterfaceControl : MonoBehaviour {
     private Text[] playerGetPointTexts;
 
 
-    void Start () {
-        GlobalObjects.SetScoreInterface(this);
-	}
-
 
     public void SetAllVis(bool vis)
     {
